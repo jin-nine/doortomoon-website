@@ -1,79 +1,152 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg-primary: #080D1A;
-  --color-bg-surface: #0F1629;
-  --color-text-primary: #F0EBE1;
-  --color-text-muted: #7A8499;
-  --color-accent: #F5A623;
-  --color-accent-dim: #C4841A;
-  --font-sans: var(--font-noto-sans-kr), var(--font-geist-sans), sans-serif;
+  --color-bg-primary: #050505;
+  --color-bg-surface: #0a0a0c;
+  --color-bg-elevated: #111114;
+  --color-text-primary: #EDEDED;
+  --color-text-muted: #6B6B76;
+  --color-accent: #D4952A;
+  --color-accent-dim: #A87422;
+  --font-sans: 'Pretendard', var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Scroll reveal animation */
-@keyframes fadeInUp {
+/* ── Scroll-triggered reveal ─────────────────────────────── */
+@keyframes revealUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(2rem);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
-/* Scroll indicator bounce */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(8px);
-  }
-}
-
-/* Grain texture for hero */
-@keyframes grain {
+/* ── Floating orbs ───────────────────────────────────────── */
+@keyframes float-slow {
   0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-2%, -2%); }
-  20% { transform: translate(2%, 2%); }
-  30% { transform: translate(-1%, 1%); }
-  40% { transform: translate(1%, -1%); }
-  50% { transform: translate(-2%, 2%); }
-  60% { transform: translate(2%, -2%); }
-  70% { transform: translate(-1%, -1%); }
-  80% { transform: translate(1%, 1%); }
-  90% { transform: translate(-2%, 1%); }
+  25% { transform: translate(8px, -14px); }
+  50% { transform: translate(-4px, -22px); }
+  75% { transform: translate(6px, -10px); }
 }
 
+@keyframes float-slower {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-10px, -18px); }
+  66% { transform: translate(6px, -8px); }
+}
+
+/* ── Scroll indicator ────────────────────────────────────── */
+@keyframes drift-down {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ── Gradient rotation for mesh ──────────────────────────── */
+@keyframes mesh-drift {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  33% { transform: translate(-50%, -50%) rotate(120deg) scale(1.05); }
+  66% { transform: translate(-50%, -50%) rotate(240deg) scale(0.95); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+
+/* ── Marquee ─────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: #080D1A;
-  color: #F0EBE1;
+  background-color: #050505;
+  color: #EDEDED;
   word-break: keep-all;
   overflow-wrap: break-word;
-  font-family: var(--font-noto-sans-kr), var(--font-geist-sans), sans-serif;
+  font-family: 'Pretendard', var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.7s ease forwards;
+/* ── Utility Classes ─────────────────────────────────────── */
+.animate-reveal {
+  animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-bounce-slow {
-  animation: bounce 1.8s ease-in-out infinite;
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
 }
 
-.hero-grain::before {
+.animate-float-slower {
+  animation: float-slower 12s ease-in-out infinite;
+}
+
+.animate-drift-down {
+  animation: drift-down 2.4s ease-in-out infinite;
+}
+
+.animate-mesh-drift {
+  animation: mesh-drift 30s linear infinite;
+}
+
+/* ── Noise Grain Overlay ─────────────────────────────────── */
+.grain-overlay::after {
   content: "";
-  position: absolute;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-  animation: grain 8s steps(1) infinite;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
   pointer-events: none;
   opacity: 0.4;
+  z-index: 60;
+}
+
+/* ── Glass surfaces ──────────────────────────────────────── */
+.glass-pill {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(10, 10, 12, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.glass-card-outer {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2rem;
+  padding: 6px;
+}
+
+.glass-card-inner {
+  background: rgba(10, 10, 12, 0.8);
+  border-radius: calc(2rem - 6px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ── Spring transition standard ──────────────────────────── */
+.spring-transition {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Accent line ─────────────────────────────────────────── */
+.accent-line {
+  position: relative;
+  padding-left: 2rem;
+}
+.accent-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 2px;
+  background: linear-gradient(to bottom, #D4952A, transparent);
+  border-radius: 1px;
 }

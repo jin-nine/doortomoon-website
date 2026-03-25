@@ -23,11 +23,11 @@ export default function ScrollReveal({
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.animationDelay = `${delay}ms`;
-          el.classList.add("animate-fade-in-up");
+          el.classList.add("animate-reveal");
           observer.unobserve(el);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
 
     observer.observe(el);
@@ -38,7 +38,7 @@ export default function ScrollReveal({
     <div
       ref={ref}
       className={className}
-      style={{ opacity: 0 }}
+      style={{ opacity: 0, willChange: "transform, opacity, filter" }}
     >
       {children}
     </div>
